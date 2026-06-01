@@ -6,8 +6,8 @@
 	- _Contribution_: \*\*\* Detail which part of the assessment you have completed and which you have supported \*\*\*
 	- _Academic integrity and attribution_: \*\*\* Select Option 1 or  Option 2 \*\*\*
 	- _Detailed use of AI programming assistant_: \*\*\* If you have selected Option 2, describe how and where you have used such a tool \*\*\*
-- **Student2 ID:** \*\*\*Please place your student ID here\*\*\*
-- **Student2 Name:** \*\*\*Please place your name here (as it appears on RMIT's rolls)\*\*\*
+- **Student2 ID:** \*\*\*s4135606\*\*\*
+- **Student2 Name:** \*\*\*Deboprio Saha Argha\*\*\*
 	- _Contribution_: \*\*\* Detail which part of the assessment you have completed and which you have supported \*\*\*
 	- _Academic integrity and attribution_: \*\*\* Select Option 1 or  Option 2 \*\*\*
 	- _Detailed use of AI programming assistant_: \*\*\* If you have selected Option 2, describe how and where you have used such a tool \*\*\*

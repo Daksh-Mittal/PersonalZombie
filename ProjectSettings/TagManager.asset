@@ -10,6 +10,7 @@ TagManager:
   - Bubble
   - Fly
   - Spike
+  - Zombie
   layers:
   - Default
   - TransparentFX
