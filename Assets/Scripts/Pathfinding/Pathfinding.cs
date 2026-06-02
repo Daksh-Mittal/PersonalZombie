@@ -89,7 +89,7 @@ public class Pathfinding : MonoBehaviour
         path.Add(startNode);
         path.Reverse();
 
-        path = SmoothPath(path);
+        //path = SmoothPath(path);
         return path.ToArray();
     }
 

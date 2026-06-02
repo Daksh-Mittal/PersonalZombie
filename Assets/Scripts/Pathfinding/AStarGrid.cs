@@ -14,9 +14,9 @@ public class AStarGrid : MonoBehaviour
     // TODO: This is unused, and can be added as part of the workshop
     public bool includeDiagonalNeighbours;
 
-    Node[,] grid;
-    float nodeDiameter;
-    int gridSizeX, gridSizeY;
+    public Node[,] grid;
+    public float nodeDiameter;
+    public int gridSizeX, gridSizeY;
 
 
 
@@ -254,4 +254,18 @@ public class AStarGrid : MonoBehaviour
             }
         }
     }
+
+    public void InitializeDynamicGrid(Vector2 newWorldSize, float newGridSize)
+    {
+        gridWorldSize = newWorldSize;
+        gridSize = newGridSize;
+
+        nodeDiameter = gridSize * 2;
+        gridSizeX = Mathf.RoundToInt(gridWorldSize.x / nodeDiameter);
+        gridSizeY = Mathf.RoundToInt(gridWorldSize.y / nodeDiameter);
+
+        CreateGrid();
+        Debug.Log($"A* Grid dynamically adjusted! Resolution matrix: {gridSizeX}x{gridSizeY}. Node Diameter: {nodeDiameter}");
+    }
+
 }
