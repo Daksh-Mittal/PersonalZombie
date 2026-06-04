@@ -64,6 +64,8 @@ public class PlayerController : MonoBehaviour
     void Shoot(Vector2 shootDirection)
     {
         Vector3 spawnPos = firePoint != null ? firePoint.position : transform.position;
+
+        spawnPos.z = 5f;
         
         GameObject bulletObj = Instantiate(bulletPrefab, spawnPos, transform.rotation);
         Bullet bulletScript = bulletObj.GetComponent<Bullet>();

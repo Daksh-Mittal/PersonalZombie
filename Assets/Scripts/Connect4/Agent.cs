@@ -9,10 +9,8 @@ public abstract class Agent : MonoBehaviour
     {
         playerIdx = _playerIdx;
     }
+    public abstract Vector2 GetMove();
 
-    public abstract int GetMove(Connect4State state);
-
-    // Helper functions that you may find useful.
     public int argMin(float[] arr)
     {
         return Enumerable.Range(0, arr.Length).Aggregate((a, b) => (arr[a] < arr[b]) ? a : b);
