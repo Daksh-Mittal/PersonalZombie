@@ -23,6 +23,8 @@ public class Bullet : MonoBehaviour
     {
         if (other.CompareTag("Zombie"))
         {
+            FindObjectOfType<WaveManager>().OnZombieDied();
+
             Destroy(other.gameObject);
 
             Destroy(gameObject);

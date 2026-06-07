@@ -150,7 +150,7 @@ public class AStarGrid : MonoBehaviour
             }
 
             // Right
-            if (InBounds(centreY + radius, horizontalSearchY))
+            if (InBounds(centreX + radius, horizontalSearchY)) 
             {
                 if (grid[centreX + radius, horizontalSearchY].walkable)
                 {
@@ -159,14 +159,13 @@ public class AStarGrid : MonoBehaviour
             }
 
             // Left
-            if (InBounds(centreY - radius, horizontalSearchY))
+            if (InBounds(centreX - radius, horizontalSearchY)) 
             {
                 if (grid[centreX - radius, horizontalSearchY].walkable)
                 {
                     return grid[centreX - radius, horizontalSearchY];
                 }
             }
-
         }
 
         return null;

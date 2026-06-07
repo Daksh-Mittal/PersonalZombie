@@ -3,7 +3,6 @@ using Unity.MLAgents.Actuators;
 using Unity.MLAgents.Sensors;
 using UnityEngine;
 
-
 public class PlayerMLBridge : Unity.MLAgents.Agent
 {
     [Header("References")]
@@ -15,31 +14,35 @@ public class PlayerMLBridge : Unity.MLAgents.Agent
     public float moveSpeed = 5f;
     public float fireRate = 0.25f;
 
-
     public float spawnRange = 4f;
     public float minSpawnDistance = 2f; 
 
     private Rigidbody2D _rb;
     private PlayerController _playerController;
     private float _nextFireTime = 0f;
-
+    
+    private bool _episodeNeedsEnding = false;
 
     public override void Initialize()
     {
         _rb = GetComponent<Rigidbody2D>();
+        
         _playerController = GetComponent<PlayerController>();
+        if (_playerController != null) _playerController.enabled = false;
 
-        if (_playerController != null)
-            _playerController.enabled = false;
+        PlayerHealth health = GetComponent<PlayerHealth>();
+        if (health != null) health.enabled = false;
     }
 
     public override void OnEpisodeBegin()
     {
+        _episodeNeedsEnding = false;
+        
         transform.position = Vector2.zero;
         _rb.linearVelocity = Vector2.zero;
         transform.rotation = Quaternion.identity;
 
-        if (zombie != null)
+        if (zombie != null && zombie.gameObject.activeInHierarchy)
         {
             Vector2 randomPos;
             do
@@ -73,7 +76,6 @@ public class PlayerMLBridge : Unity.MLAgents.Agent
         sensor.AddObservation(_rb.linearVelocity.x);
         sensor.AddObservation(_rb.linearVelocity.y);
 
-
         Rigidbody2D zombieRb = zombie.GetComponent<Rigidbody2D>();
         if (zombieRb != null)
         {
@@ -86,7 +88,6 @@ public class PlayerMLBridge : Unity.MLAgents.Agent
             sensor.AddObservation(0f);
         }
     }
-
 
     public override void OnActionReceived(ActionBuffers actions)
     {
@@ -105,6 +106,7 @@ public class PlayerMLBridge : Unity.MLAgents.Agent
 
         AddReward(0.001f);
     }
+    
     public override void Heuristic(in ActionBuffers actionsOut)
     {
         ActionSegment<float> continuous = actionsOut.ContinuousActions;
@@ -126,6 +128,16 @@ public class PlayerMLBridge : Unity.MLAgents.Agent
         if (collision.gameObject.CompareTag("Zombie"))
         {
             SetReward(-1.0f);
+            
+            _episodeNeedsEnding = true; 
+        }
+    }
+
+    private void FixedUpdate()
+    {
+        if (_episodeNeedsEnding)
+        {
+            _episodeNeedsEnding = false;
             EndEpisode();
         }
     }

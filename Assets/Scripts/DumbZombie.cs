@@ -64,6 +64,12 @@ public class DumbZombie : MonoBehaviour
     {
         _neighbours.Clear();
 
+        // 1. SAFETY CHECK: If there is no parent, stop here to prevent a crash
+        if (transform.parent == null) return;
+
+        // 2. SAFETY CHECK: If the parent is missing the FlockSettings script, stop here
+        if (_settings == null) return;
+
         foreach (Transform member in transform.parent)
         {
             if (member != transform &&
