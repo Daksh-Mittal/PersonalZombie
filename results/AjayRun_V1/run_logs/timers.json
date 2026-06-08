@@ -1,0 +1,42 @@
+{
+    "name": "root",
+    "metadata": {
+        "timer_format_version": "0.1.0",
+        "start_time_seconds": "1780891101",
+        "python_version": "3.10.12 | packaged by Anaconda, Inc. | (main, Jul  5 2023, 19:01:18) [MSC v.1916 64 bit (AMD64)]",
+        "command_line_arguments": "C:\\Users\\ajayt\\anaconda3\\envs\\mlagents\\Scripts\\mlagents-learn Ajay_Config.yaml --run-id=AjayRun_V1",
+        "mlagents_version": "1.1.0",
+        "mlagents_envs_version": "1.1.0",
+        "communication_protocol_version": "1.5.0",
+        "pytorch_version": "2.12.0+cpu",
+        "numpy_version": "1.23.5",
+        "end_time_seconds": "1780891164"
+    },
+    "total": 63.41574540000147,
+    "count": 1,
+    "self": 0.013526000000638305,
+    "children": {
+        "run_training.setup": {
+            "total": 0.1350854000011168,
+            "count": 1,
+            "self": 0.1350854000011168
+        },
+        "TrainerController.start_learning": {
+            "total": 63.267133999999714,
+            "count": 1,
+            "self": 0.0001503000003140187,
+            "children": {
+                "TrainerController._reset_env": {
+                    "total": 63.26694940000016,
+                    "count": 1,
+                    "self": 63.26694940000016
+                },
+                "TrainerController._save_models": {
+                    "total": 3.429999924264848e-05,
+                    "count": 1,
+                    "self": 3.429999924264848e-05
+                }
+            }
+        }
+    }
+}

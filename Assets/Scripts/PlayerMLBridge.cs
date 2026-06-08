@@ -14,7 +14,8 @@ public class PlayerMLBridge : Unity.MLAgents.Agent
     public float moveSpeed = 5f;
     public float fireRate = 0.25f;
 
-    public float spawnRange = 4f;
+    public float spawnRangeX = 7f;
+    public float spawnRangeY = 2f;
     public float minSpawnDistance = 2f; 
 
     private Rigidbody2D _rb;
@@ -31,16 +32,32 @@ public class PlayerMLBridge : Unity.MLAgents.Agent
         if (_playerController != null) _playerController.enabled = false;
 
         PlayerHealth health = GetComponent<PlayerHealth>();
-        if (health != null) health.enabled = false;
+        if (health != null) health.enabled = true;
     }
 
     public override void OnEpisodeBegin()
     {
-        _episodeNeedsEnding = false;
-        
-        transform.position = Vector2.zero;
-        _rb.linearVelocity = Vector2.zero;
+
+        PlayerHealth healthScript = GetComponent<PlayerHealth>();
+        if (healthScript != null)
+        {
+            healthScript.currentHealth = healthScript.maxHealth;
+            if (healthScript.uiManager != null) healthScript.uiManager.UpdateHealthUI(healthScript.currentHealth);
+        }
+
+        transform.position = new Vector3(0f, 0f, transform.position.z);
         transform.rotation = Quaternion.identity;
+
+        if (transform.parent != null)
+        {
+            transform.parent.position = new Vector3(0f, 0f, -1f); 
+        }
+
+        if (_rb != null) 
+        {
+            _rb.linearVelocity = Vector2.zero;
+            _rb.angularVelocity = 0f;
+        }
 
         if (zombie != null && zombie.gameObject.activeInHierarchy)
         {
@@ -48,17 +65,28 @@ public class PlayerMLBridge : Unity.MLAgents.Agent
             do
             {
                 randomPos = new Vector2(
-                    Random.Range(-spawnRange, spawnRange),
-                    Random.Range(-spawnRange, spawnRange)
+                    Random.Range(-spawnRangeX, spawnRangeX),
+                    Random.Range(-spawnRangeY, spawnRangeY) 
                 );
             }
             while (Vector2.Distance(randomPos, Vector2.zero) < minSpawnDistance);
 
-            zombie.position = randomPos;
+            zombie.position = new Vector3(randomPos.x, randomPos.y, 0f);
 
             Rigidbody2D zombieRb = zombie.GetComponent<Rigidbody2D>();
-            if (zombieRb != null) zombieRb.linearVelocity = Vector2.zero;
+            if (zombieRb != null) 
+            {
+                zombieRb.linearVelocity = Vector2.zero;
+                zombieRb.angularVelocity = 0f;
+            }
         }
+
+        WaveManager waveManager = FindFirstObjectByType<WaveManager>();
+        if (waveManager != null)
+        {
+            waveManager.ResetWaves();
+        }
+
     }
 
     public override void CollectObservations(VectorSensor sensor)
@@ -129,7 +157,7 @@ public class PlayerMLBridge : Unity.MLAgents.Agent
         {
             SetReward(-1.0f);
             
-            _episodeNeedsEnding = true; 
+            // _episodeNeedsEnding = true; 
         }
     }
 

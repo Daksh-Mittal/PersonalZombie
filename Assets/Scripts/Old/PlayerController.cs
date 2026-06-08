@@ -50,16 +50,16 @@ public class PlayerController : MonoBehaviour
         rb.linearVelocity = new Vector2(x, y).normalized * speed;
     }
 
-    public void TakeDamage()
-    {
-        health--;
-        Debug.Log("Health: " + health);
+    // public void TakeDamage()
+    // {
+    //     health--;
+    //     Debug.Log("Health: " + health);
 
-        if (health <= 0)
-        {
-            Debug.Log("Game Over!");
-        }
-    }
+    //     if (health <= 0)
+    //     {
+    //         Debug.Log("Game Over!");
+    //     }
+    // }
 
     void Shoot(Vector2 shootDirection)
     {

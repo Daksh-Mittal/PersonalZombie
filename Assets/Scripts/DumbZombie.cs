@@ -2,6 +2,7 @@ using Globals;
 using SteeringCalcs;
 using UnityEngine;
 
+
 public class DumbZombie : MonoBehaviour
 {
     public float MaxSpeed;
@@ -16,30 +17,44 @@ public class DumbZombie : MonoBehaviour
     private Animator _animator;
     private FlockSettings _settings;
     private System.Collections.Generic.List<Transform> _neighbours;
+    private MapGenerator _mapGen;
+    
+    WaveManager waveManager;
 
     void Start()
     {
         _rb = GetComponent<Rigidbody2D>();
         _sr = GetComponent<SpriteRenderer>();
         _animator = GetComponent<Animator>();
-        //Setting the player character in the code
         Player = GameObject.Find("player_Character");
 
-        //Getting the flock settings and neighbour list from the parent object
         _settings = transform.parent.GetComponent<FlockSettings>();
         _neighbours = new System.Collections.Generic.List<Transform>();
+
+        waveManager = FindFirstObjectByType<WaveManager>();
+
+        _mapGen = FindFirstObjectByType<MapGenerator>();
+    }
+
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("Spike"))
+        {
+            if (waveManager != null)
+                waveManager.OnZombieDied();
+
+            Destroy(gameObject);
+        }
     }
 
     void FixedUpdate()
     {
         UpdateNeighbours();
 
-        //Setting the target to the player character's position
         _target = Player.transform.position;
 
         Vector2 desiredVel = Vector2.zero;
 
-        //Using the seek steering behavior to calculate the desired velocity towards the target
         desiredVel = Steering.ArriveDirect(transform.position, _target, ArriveRadius, MaxSpeed);
 
         if (_settings != null && _neighbours.Count > 0)
@@ -54,9 +69,10 @@ public class DumbZombie : MonoBehaviour
         Vector2 steering = Steering.DesiredVelToForce(desiredVel, _rb, AccelTime, MaxAccel);
         _rb.AddForce(steering);
 
-        //Rotating the zombie to face the direction of movement
         float angle = Mathf.Atan2(_rb.linearVelocity.y, _rb.linearVelocity.x) * Mathf.Rad2Deg;
         transform.rotation = Quaternion.Euler(0, 0, angle);
+
+        CheckBounds();
     }
 
 
@@ -64,10 +80,8 @@ public class DumbZombie : MonoBehaviour
     {
         _neighbours.Clear();
 
-        // 1. SAFETY CHECK: If there is no parent, stop here to prevent a crash
         if (transform.parent == null) return;
 
-        // 2. SAFETY CHECK: If the parent is missing the FlockSettings script, stop here
         if (_settings == null) return;
 
         foreach (Transform member in transform.parent)
@@ -77,6 +91,27 @@ public class DumbZombie : MonoBehaviour
             {
                 _neighbours.Add(member);
             }
+        }
+    }
+
+    private void CheckBounds()
+    {
+        if (_mapGen == null) return;
+
+        float halfWidth  = (_mapGen.width  * _mapGen.tileSize) / 2f;
+        float halfHeight = (_mapGen.height * _mapGen.tileSize) / 2f;
+
+        Vector2 mapCenter = _mapGen.transform.position;
+        Vector2 pos = transform.position;
+
+        bool outOfBounds = pos.x < mapCenter.x - halfWidth  || pos.x > mapCenter.x + halfWidth  || pos.y < mapCenter.y - halfHeight || pos.y > mapCenter.y + halfHeight;
+
+        if (outOfBounds)
+        {
+            if (waveManager != null) waveManager.OnZombieDied();
+
+            print("Dumb Zombie went out of bounds and was destroyed.");
+            Destroy(gameObject);
         }
     }
     

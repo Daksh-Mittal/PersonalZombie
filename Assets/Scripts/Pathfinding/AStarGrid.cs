@@ -62,6 +62,13 @@ public class AStarGrid : MonoBehaviour
                 bool walkable = (Physics2D.OverlapCircle(worldPoint, overlapCircleRadius, unwalkableMask) == null);
                 int movementPenalty = 0;
                 if (walkable) {
+                    float proximityRadius = 0.4f; //TODO: TUNE THIS
+                    bool nearWall = Physics2D.OverlapCircle(worldPoint, proximityRadius, unwalkableMask) != null;
+                    if (nearWall)
+                    {
+                        movementPenalty += 30;
+                    }
+
                     foreach (TerrainType region in walkableRegions) {
                         if (Physics2D.OverlapCircle(worldPoint, overlapCircleRadius, region.terrainMask)) {
                             movementPenalty += region.terrainPenalty;
@@ -234,6 +241,13 @@ public class AStarGrid : MonoBehaviour
                 
                 if (walkable) 
                 {
+                    float proximityRadius = 0.4f; //TODO: TUNE THIS
+                    bool nearWall = Physics2D.OverlapCircle(worldPoint, proximityRadius, unwalkableMask) != null;
+                    if (nearWall)
+                    {
+                        movementPenalty += 30;
+                    }
+
                     foreach (TerrainType region in walkableRegions) 
                     {
                         if (Physics2D.OverlapCircle(worldPoint, overlapCircleRadius, region.terrainMask)) 
@@ -243,7 +257,7 @@ public class AStarGrid : MonoBehaviour
                     }
                     if (Physics2D.OverlapCircle(worldPoint, overlapCircleRadius * 2f, dynamicObstacleMask)) 
                     {
-                        movementPenalty += 50; // Dynamic Obstacle avoidance
+                        movementPenalty += 50; 
                     }
                 }
                 

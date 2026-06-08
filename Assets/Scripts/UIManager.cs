@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI; 
+using TMPro;
 
 public class UIManager : MonoBehaviour
 {
@@ -10,10 +11,19 @@ public class UIManager : MonoBehaviour
     public GameObject gameOverScreen;
     public GameObject winScreen;
 
+    [Header("Wave UI")]
+    public TextMeshProUGUI waveText;
+
     void Start()
     {
         if (gameOverScreen != null) gameOverScreen.SetActive(false);
         if (winScreen != null) winScreen.SetActive(false);
+    }
+
+    public void UpdateWaveUI(int currentWave, int maxWaves)
+    {
+        if (waveText != null)
+            waveText.text = "Wave " + currentWave + " / " + maxWaves;
     }
 
     public void UpdateHealthUI(int currentHealth)

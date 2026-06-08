@@ -22,6 +22,9 @@ public class MapGenerator : MonoBehaviour
     public GameObject[] hazardPrefabs;
     [Range(0f, 0.1f)] public float hazardDensity = 0.03f;
 
+    [Header("Obstacle Spacing")]
+    public int obstacleClearance = 2;
+
     private int[,] mapData;
     
     [HideInInspector] public List<Vector2> validFloorPositions = new List<Vector2>();
@@ -62,13 +65,13 @@ public class MapGenerator : MonoBehaviour
  
                         if (spawnRoll < obstacleDensity)
                         {
-                            if (mapData[x - 1, y] != 1 && mapData[x, y - 1] != 1)
+                            if (!HasNearbyObstacle(x, y))
                             {
-                                mapData[x, y] = 1; 
+                                mapData[x, y] = 1;
                             }
                             else
                             {
-                                mapData[x, y] = 0; 
+                                mapData[x, y] = 0;
                             }
                         }
                         else if (spawnRoll < (obstacleDensity + hazardDensity))
@@ -145,4 +148,27 @@ public class MapGenerator : MonoBehaviour
         int randomIndex = Random.Range(0, validFloorPositions.Count);
         return validFloorPositions[randomIndex];
     }
+
+    private bool HasNearbyObstacle(int x, int y)
+    {
+        for (int dx = -obstacleClearance; dx <= obstacleClearance; dx++)
+        {
+            for (int dy = -obstacleClearance; dy <= obstacleClearance; dy++)
+            {
+                int checkX = x + dx;
+                int checkY = y + dy;
+
+                if (checkX < 0 || checkX >= width ||
+                    checkY < 0 || checkY >= height)
+                    continue;
+
+                if (mapData[checkX, checkY] == 1)
+                    return true;
+            }
+        }
+
+        return false;
+    }
+
+
 }

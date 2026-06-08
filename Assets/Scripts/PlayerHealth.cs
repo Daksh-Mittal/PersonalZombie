@@ -27,6 +27,12 @@ public class PlayerHealth : MonoBehaviour
         }
     }
 
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("Spike"))
+            TakeDamage(1);
+    }
+
     public void TakeDamage(int amount)
     {
         currentHealth -= amount;
@@ -63,8 +69,19 @@ public class PlayerHealth : MonoBehaviour
     void Die()
     {
         Debug.Log("Game Over! Health reached 0.");
-        gameObject.SetActive(false);
-        
-        if (uiManager != null) uiManager.ShowGameOver(); 
+        PlayerMLBridge mlBridge = GetComponent<PlayerMLBridge>();
+
+        if (mlBridge != null)
+        {
+            mlBridge.AddReward(-1.0f);
+            
+            mlBridge.EndEpisode(); 
+        }
+        else
+        {
+            // Human mode fallback
+            gameObject.SetActive(false);
+            if (uiManager != null) uiManager.ShowGameOver(); 
+        }
     }
 }
